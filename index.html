@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="一个简洁现代的个人博客 —— 记录想法、教程与日常。" />
-    <title>墨记 · Inkwell Blog</title>
+    <meta name="description" content="锚点 —— 用系统对抗混乱，用逻辑重塑日常。" />
+    <title>锚点 · Anchor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -12,14 +12,20 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
-              serif: ['Noto Serif SC', 'Georgia', 'serif'],
+              // 思源黑体（Noto Sans SC）为主，Inter 兜底拉丁字符
+              sans: ['Noto Sans SC', 'Inter', 'system-ui', 'sans-serif'],
             },
             colors: {
+              // 效率蓝（主色）
               brand: {
-                50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
-                400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
-                800: '#3730a3', 900: '#312e81',
+                50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                800: '#1e40af', 900: '#1e3a8a',
+              },
+              // 活力橙（强调色）
+              accent: {
+                50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74',
+                400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c',
               },
             },
           },
@@ -29,17 +35,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
     <style>
       html { scroll-behavior: smooth; }
-      body { font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif; }
+      body { font-family: 'Noto Sans SC', 'Inter', system-ui, sans-serif; }
       /* 平滑的明暗切换过渡 */
       body, header, article, aside, .theme-transition {
         transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
       }
-      ::selection { background-color: #c7d2fe; color: #312e81; }
+      ::selection { background-color: #bfdbfe; color: #1e3a8a; }
     </style>
     <script type="importmap">
       {

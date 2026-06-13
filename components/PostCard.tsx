@@ -8,10 +8,10 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
   const minutes = post.readingMinutes ?? estimateReadingMinutes(post.content);
 
   return (
-    <article className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-500/40">
+    <article className="group rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-500/40">
       <a href={`#/post/${post.slug}`} className="block">
         {post.cover && (
-          <div className="mb-4 overflow-hidden rounded-xl">
+          <div className="mb-4 overflow-hidden rounded-md">
             <img
               src={post.cover}
               alt={post.title}
@@ -42,7 +42,7 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
           <a
             key={tag}
             href={`#/tag/${encodeURIComponent(tag)}`}
-            className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/20"
+            className="rounded-md bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/20"
           >
             # {tag}
           </a>

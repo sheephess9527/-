@@ -41,7 +41,7 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
             <a
               key={tag}
               href={`#/tag/${encodeURIComponent(tag)}`}
-              className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/20"
+              className="rounded-md bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/20"
             >
               # {tag}
             </a>

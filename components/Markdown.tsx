@@ -121,6 +121,67 @@ export function Markdown({ source }: { source: string }): React.ReactElement {
       continue;
     }
 
+    // 表格（GFM 风格）：
+    //   | 表头 | 表头 |
+    //   | --- | --- |
+    //   | 单元 | 单元 |
+    if (
+      line.trim().startsWith('|') &&
+      i + 1 < lines.length &&
+      /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i + 1]) &&
+      lines[i + 1].includes('-')
+    ) {
+      const splitRow = (row: string) =>
+        row
+          .trim()
+          .replace(/^\|/, '')
+          .replace(/\|$/, '')
+          .split('|')
+          .map((c) => c.trim());
+
+      const headers = splitRow(line);
+      i += 2; // 跳过表头行和分隔行
+      const rows: string[][] = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        rows.push(splitRow(lines[i]));
+        i++;
+      }
+
+      blocks.push(
+        <div key={nextKey()} className="my-6 overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="bg-slate-50 dark:bg-slate-800/60">
+                {headers.map((h) => (
+                  <th
+                    key={nextKey()}
+                    className="border-b border-slate-200 px-4 py-2.5 text-left font-bold text-slate-700 dark:border-slate-700 dark:text-slate-200"
+                  >
+                    {parseInline(h)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={nextKey()} className="even:bg-slate-50/50 dark:even:bg-slate-800/30">
+                  {row.map((cell) => (
+                    <td
+                      key={nextKey()}
+                      className="border-b border-slate-100 px-4 py-2.5 text-slate-600 last:border-0 dark:border-slate-800 dark:text-slate-300"
+                    >
+                      {parseInline(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+
     // 分隔线
     if (/^(-{3,}|\*{3,}|_{3,})$/.test(line.trim())) {
       blocks.push(<hr key={nextKey()} className="my-8 border-slate-200 dark:border-slate-800" />);
@@ -222,6 +283,7 @@ export function Markdown({ source }: { source: string }): React.ReactElement {
       !lines[i].trim().startsWith('>') &&
       !/^[-*]\s+/.test(lines[i].trim()) &&
       !/^\d+\.\s+/.test(lines[i].trim()) &&
+      !lines[i].trim().startsWith('|') &&
       !/^(-{3,}|\*{3,}|_{3,})$/.test(lines[i].trim())
     ) {
       para.push(lines[i]);

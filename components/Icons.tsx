@@ -2,11 +2,11 @@ import React from 'react';
 
 type IconProps = { className?: string };
 
-export const FeatherIcon: React.FC<IconProps> = ({ className }) => (
+export const AnchorIcon: React.FC<IconProps> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
-    <line x1="16" y1="8" x2="2" y2="22" />
-    <line x1="17.5" y1="15" x2="9" y2="15" />
+    <circle cx="12" cy="5" r="3" />
+    <line x1="12" y1="22" x2="12" y2="8" />
+    <path d="M5 12H2a10 10 0 0 0 20 0h-3" />
   </svg>
 );
 
