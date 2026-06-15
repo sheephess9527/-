@@ -1,7 +1,8 @@
 import { Post } from '../types';
 
-// 文章以 Markdown 文件存储在 content/posts/ 下，由后台（/admin）读写。
+// 文章以 Markdown 文件存储在 content/posts/ 下。
 // 这里用 Vite 的 import.meta.glob 在构建时把它们全部读进来。
+// 新增文章：在 content/posts/ 里加一个 .md 文件（带 YAML frontmatter）即可。
 const modules = import.meta.glob('../content/posts/*.md', {
   query: '?raw',
   import: 'default',
