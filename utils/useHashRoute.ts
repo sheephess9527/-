@@ -29,14 +29,24 @@ export function parseHash(hash: string): Route {
 export function useHashRoute(): Route {
   const [route, setRoute] = useState<Route>(() => parseHash(window.location.hash));
 
+  // 关闭浏览器的自动滚动恢复，避免手机上切换文章时停留在旧的滚动位置。
   useEffect(() => {
-    const onChange = () => {
-      setRoute(parseHash(window.location.hash));
-      window.scrollTo({ top: 0 });
-    };
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
+
+  useEffect(() => {
+    const onChange = () => setRoute(parseHash(window.location.hash));
     window.addEventListener('hashchange', onChange);
     return () => window.removeEventListener('hashchange', onChange);
   }, []);
+
+  // 在新页面内容渲染完成后再滚动到顶部（而不是在 hashchange 时立即滚动，
+  // 那时旧内容还在，滚动会作用在错误的布局上）。
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [route.name, (route as { slug?: string }).slug, (route as { tag?: string }).tag]);
 
   return route;
 }
