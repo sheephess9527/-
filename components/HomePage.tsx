@@ -14,8 +14,13 @@ const HomePage: React.FC = () => {
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
           {siteConfig.subtitle}
         </p>
-        <h1 className="mt-5 max-w-3xl text-3xl font-bold leading-[1.25] tracking-tight text-slate-900 dark:text-white sm:text-5xl">
-          {siteConfig.description}
+        <h1 className="mt-6 text-[1.75rem] font-bold leading-[1.4] tracking-tight text-slate-900 dark:text-white sm:text-[2.5rem] sm:leading-[1.35]">
+          {siteConfig.description.split('，').map((part, i, arr) => (
+            <span key={i} className="block">
+              {part}
+              {i < arr.length - 1 ? '，' : ''}
+            </span>
+          ))}
         </h1>
         {tags.length > 0 && (
           <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
