@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 大多数计划评审都在问「为什么它会成功」。预提验尸反过来问：「如果一年后它彻底失败了，原因是什么？」这个问题能暴露你平时看不见的风险。
 tags:
   - 决策
-cover: https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/140/1200/800
 ---
 
 你制定了一个计划，团队评审觉得不错，大家信心满满地开始执行。

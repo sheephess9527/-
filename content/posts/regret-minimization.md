@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 当一个决定大到让你纠结不已时，别再算短期得失。想象八十岁的自己回头看，你会怎么选——这个视角往往让答案瞬间清晰。
 tags:
   - 决策
-cover: https://images.unsplash.com/photo-1493217465235-252dd9c0d632?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/220/1200/800
 ---
 
 贝索斯在决定是否离开稳定的高薪工作去创业时，用了一个他称为「遗憾最小化框架」的方法。

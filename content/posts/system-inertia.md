@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 你知道新方法更好，却还是用旧的——这不是懒，是系统惯性在起作用。理解它，才能知道如何真正改变。
 tags:
   - 系统思维
-cover: https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/30/1200/800
 ---
 
 你研究了一套新的笔记方法，逻辑严密，框架完整。试了三天，第四天恢复原来那套。

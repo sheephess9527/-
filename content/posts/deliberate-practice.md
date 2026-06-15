@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 「一万小时定律」被广泛误解了。重要的不是时间的长度，而是练习的质量。刻意练习和普通练习之间的差距，就是顶尖者和普通者的差距。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1434030216411-0b793f4b6f71?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/180/1200/800
 ---
 
 有一个常见的误解：在一件事上花足够多的时间，就能变得优秀。

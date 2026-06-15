@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 同时处理多件事看起来高效，实际上是在反复支付「切换成本」。单任务不是保守，是在认知层面更聪明的选择。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/170/1200/800
 ---
 
 你的手机放在旁边，邮件客户端开着，同时还在想下午的会议——你真的在专心写这份报告吗？

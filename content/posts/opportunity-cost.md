@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 机会成本是经济学最重要的概念之一，但它真正的价值在日常决策中：每一个选择都在放弃其他可能性，而这个放弃的代价，往往比选择本身更重要。
 tags:
   - 决策
-cover: https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/130/1200/800
 ---
 
 你花两万块买了一台新电脑。

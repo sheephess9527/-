@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 给一件事一周时间，它就会花掉一周；给它一天，它往往也能完成。工作会自动膨胀，填满你给它的所有时间——除非你主动设限。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/250/1200/800
 ---
 
 1955 年，英国历史学家帕金森提出了一个后来广为流传的观察：

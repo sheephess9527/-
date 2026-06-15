@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 帕累托法则不是叫你偷懒，而是叫你找对发力点。把最关键的 20% 识别出来，你的效率可以在不增加投入的情况下大幅提升。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/160/1200/800
 ---
 
 意大利经济学家帕累托在 1896 年发现：意大利约 80% 的土地，由约 20% 的人口拥有。

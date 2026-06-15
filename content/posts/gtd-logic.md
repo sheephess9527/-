@@ -5,7 +5,7 @@ author: 锚点
 excerpt: Getting Things Done 之所以有效，不是因为它是一套复杂系统，而是因为它解决了大脑最根本的一个问题：它不擅长储存，只擅长处理。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/90/1200/800
 ---
 
 你有没有这样的经历：

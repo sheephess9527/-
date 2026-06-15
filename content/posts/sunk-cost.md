@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 「都已经投入这么多了」——这句话每年让无数人在错误的道路上越走越远。沉没成本不是理由，理解这一点能为你省下大量资源。
 tags:
   - 决策
-cover: https://images.unsplash.com/photo-1509475826633-fed577a2c71b?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/50/1200/800
 ---
 
 你买了一张演唱会门票，临近时发现自己不太想去了——太累，天气也不好。

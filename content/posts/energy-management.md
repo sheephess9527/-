@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 时间是固定的，精力是可再生的。最高效的人不是每天工作最长的人，而是懂得在精力最充沛时做最重要事情的人。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/80/1200/800
 ---
 
 时间管理告诉你：把每一个小时都利用起来。

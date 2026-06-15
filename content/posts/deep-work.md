@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 每天忙了十二个小时，却感觉没做什么真正有价值的事——这不是你懒，是深度工作时间被吞噬了。
 tags:
   - 效率
-cover: https://images.unsplash.com/photo-1516414447565-b14be0adf13e?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/70/1200/800
 ---
 
 知识工作者面临一个奇怪的困境：工作时间越来越长，真正的产出却越来越少。

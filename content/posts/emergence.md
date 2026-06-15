@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 单个蚂蚁很笨，蚁群却能建造复杂的巢穴。理解「涌现」，你会用全新的方式看待团队、习惯和复杂问题。
 tags:
   - 系统思维
-cover: https://images.unsplash.com/photo-1471520201477-47a62a269a87?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/190/1200/800
 ---
 
 一只蚂蚁几乎没有智能。它只遵循几条简单规则：跟着信息素走，发现食物就留下标记，遇到同伴就交换信息。

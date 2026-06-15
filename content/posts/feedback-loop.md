@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 一个系统能不能自我强化，取决于它的反馈回路是正向还是负向。读懂这个机制，你就能主动设计让自己进步的循环。
 tags:
   - 系统思维
-cover: https://images.unsplash.com/photo-1553028826-f4804a6dba3b?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/10/1200/800
 ---
 
 同样是努力，有些人越练越强，有些人原地打转。区别往往不是努力程度，而是**反馈回路的方向**。

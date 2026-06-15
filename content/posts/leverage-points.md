@@ -5,7 +5,7 @@ author: 锚点
 excerpt: 系统中并不是每个地方都值得投入同等力气。找到杠杆点，用最小的干预撬动最大的改变——这是系统思维最实用的一课。
 tags:
   - 系统思维
-cover: https://images.unsplash.com/photo-1535223289429-462dc3f7e69f?auto=format&fit=crop&w=1200&q=70
+cover: https://picsum.photos/seed/110/1200/800
 ---
 
 为什么有些改变轻描淡写就发生了，而有些改变用了巨大的力气却纹丝不动？
