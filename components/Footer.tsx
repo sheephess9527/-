@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="mt-24 border-t border-slate-200 dark:border-slate-800">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 px-5 py-10 text-center">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 py-10 text-center sm:px-8">
         <div className="flex items-center gap-2">
           {social.github && (
             <a

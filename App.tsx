@@ -26,10 +26,11 @@ const App: React.FC = () => {
     }
   };
 
+  // 各页面自行控制内容宽度：首页/标签页用宽网格，文章页用窄栏便于阅读。
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-10">{renderRoute()}</main>
+      <main className="w-full flex-1">{renderRoute()}</main>
       <Footer />
     </div>
   );

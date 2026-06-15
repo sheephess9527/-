@@ -13,7 +13,7 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
   const minutes = post.readingMinutes ?? estimateReadingMinutes(post.content);
 
   return (
-    <article>
+    <article className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
       <a
         href="#/"
         className="mb-12 inline-flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-brand-600 dark:text-slate-500 dark:hover:text-brand-400"
