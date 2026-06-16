@@ -14,7 +14,7 @@ export const siteConfig = {
   // 页脚社交链接（留空的会自动隐藏）
   social: {
     github: '',
-    email: 'mailto:zjy82315@gmail.com',
+    email: 'mailto:hztbc001@gmail.com',
     twitter: '',
   },
   // “关于”页面的内容（Markdown）
@@ -36,6 +36,6 @@ export const siteConfig = {
 
 ### 联系
 
-- 发邮件到 [zjy82315@gmail.com](mailto:zjy82315@gmail.com)
+- 发邮件到 [hztbc001@gmail.com](mailto:hztbc001@gmail.com)
 `,
 };
