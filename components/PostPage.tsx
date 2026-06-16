@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getPostBySlug, sortedPosts } from '../data/posts';
 import { formatDate } from '../utils/formatDate';
 import { estimateReadingMinutes } from '../utils/readingTime';
@@ -9,7 +9,7 @@ import { extractHeadings } from '../utils/extractHeadings';
 import { Markdown } from './Markdown';
 import NotFound from './NotFound';
 import TableOfContents from './TableOfContents';
-import { ArrowLeftIcon, ClockIcon, EyeIcon } from './Icons';
+import { ArrowLeftIcon, ClockIcon, EyeIcon, ShareIcon, CheckIcon } from './Icons';
 
 const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
   useReadingPosition(slug);
@@ -31,6 +31,29 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
   const minutes = post.readingMinutes ?? estimateReadingMinutes(post.content);
   const headings = extractHeadings(post.content);
 
+  const [copied, setCopied] = useState(false);
+  const shareUrl = `https://www.maodian.uk/#/post/${slug}`;
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: post.title,
+          text: post.excerpt,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // 用户取消分享，不做处理
+        return;
+      }
+    }
+    // 降级：复制链接
+    await navigator.clipboard.writeText(shareUrl).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   // 上一篇 / 下一篇（sortedPosts 已按日期倒序）
   const idx = sortedPosts.findIndex((p) => p.slug === slug);
   const newer = idx > 0 ? sortedPosts[idx - 1] : null;
@@ -49,9 +72,21 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
         </a>
 
         <header className="mb-10">
-          <h1 className="text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-5xl">
-            {post.title}
-          </h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+              {post.title}
+            </h1>
+            <button
+              onClick={handleShare}
+              title={copied ? '链接已复制！' : '分享文章'}
+              className="no-print mt-2 shrink-0 flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-400 transition-colors hover:border-brand-400 hover:text-brand-600 dark:border-slate-700 dark:hover:border-brand-500 dark:hover:text-brand-400"
+            >
+              {copied
+                ? <><CheckIcon className="h-3.5 w-3.5 text-green-500" /><span className="text-green-500">已复制</span></>
+                : <><ShareIcon className="h-3.5 w-3.5" /><span className="hidden sm:inline">分享</span></>
+              }
+            </button>
+          </div>
           <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-400">
             <time dateTime={post.date}>{formatDate(post.date)}</time>
             <span>·</span>
