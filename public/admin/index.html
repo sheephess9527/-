@@ -187,6 +187,12 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
+// GitHub API returns base64; TextDecoder handles Chinese UTF-8 correctly
+function b64ToUtf8(b64) {
+  const bytes = Uint8Array.from(atob(b64.replace(/\n/g, '')), c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
 function buildFrontmatter(f) {
   const tags = f.tags.split(',').map(t => t.trim()).filter(Boolean);
   const tagLines = tags.map(t => `  - ${t}`).join('\n');
@@ -266,7 +272,7 @@ async function loadPosts() {
     const details = await Promise.all(mds.map(async f => {
       const r = await fetch(f.url, { headers: headers() });
       const j = await r.json();
-      const raw = atob(j.content.replace(/\n/g, ''));
+      const raw = b64ToUtf8(j.content);
       const { data } = parseFrontmatter(raw);
       return { slug: f.name.replace(/\.md$/, ''), title: data.title || f.name, date: data.date || '', sha: j.sha };
     }));
@@ -328,7 +334,7 @@ async function openEdit(slug) {
   const res = await fetch(`${API}/repos/${OWNER}/${REPO}/contents/content/posts/${slug}.md?ref=${BRANCH}`, { headers: headers() });
   const j = await res.json();
   editingFileSha = j.sha;
-  const { data, body } = parseFrontmatter(atob(j.content.replace(/\n/g, '')));
+  const { data, body } = parseFrontmatter(b64ToUtf8(j.content));
   document.getElementById('f-title').value = data.title || '';
   document.getElementById('f-slug').value = slug;
   document.getElementById('f-slug').readOnly = true;
