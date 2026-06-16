@@ -13,12 +13,9 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
-      {/* 刊头：用 slogan 作为主视觉，不重复站名 */}
+      {/* 刊头：用 slogan 作为主视觉，不重复站名（站名已在顶部 Header 显示） */}
       <section className="mb-14 border-b border-slate-900/10 pb-12 dark:border-white/10">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
-          {siteConfig.subtitle}
-        </p>
-        <h1 className="mt-6 text-[1.75rem] font-bold leading-[1.4] tracking-tight text-slate-900 dark:text-white sm:text-[2.5rem] sm:leading-[1.35]">
+        <h1 className="text-[1.75rem] font-bold leading-[1.4] tracking-tight text-slate-900 dark:text-white sm:text-[2.5rem] sm:leading-[1.35]">
           {siteConfig.description.split('，').map((part, i, arr) => (
             <span key={i} className="block">
               {part}
