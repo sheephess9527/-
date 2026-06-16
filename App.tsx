@@ -27,11 +27,17 @@ const App: React.FC = () => {
     }
   };
 
+  const routeKey = `${route.name}-${'slug' in route ? route.slug : ''}-${'tag' in route ? route.tag : ''}`;
+
   // 各页面自行控制内容宽度：首页/标签页用宽网格，文章页用窄栏便于阅读。
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="w-full flex-1">{renderRoute()}</main>
+      <main className="w-full flex-1">
+        <div key={routeKey} className="page-enter">
+          {renderRoute()}
+        </div>
+      </main>
       <Footer />
       <RefreshButton />
     </div>

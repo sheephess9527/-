@@ -60,6 +60,12 @@
       }
       ::selection { background-color: #bfdbfe; color: #1e3a8a; }
       article, main { font-size: 18px; }
+      /* 页面切换过渡动画 */
+      @keyframes page-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .page-enter { animation: page-in 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
     </style>
     <script type="importmap">
       {
