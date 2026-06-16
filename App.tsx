@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHashRoute } from './utils/useHashRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,6 +11,14 @@ import RefreshButton from './components/RefreshButton';
 
 const App: React.FC = () => {
   const route = useHashRoute();
+
+  // 非文章页的 document.title（文章页由 PostPage 自己设）
+  useEffect(() => {
+    if (route.name === 'post') return;
+    if (route.name === 'about') document.title = '关于 · 锚点';
+    else if (route.name === 'tag') document.title = `${(route as { tag: string }).tag} · 锚点`;
+    else document.title = '锚点 · Anchor';
+  }, [route]);
 
   const renderRoute = () => {
     switch (route.name) {

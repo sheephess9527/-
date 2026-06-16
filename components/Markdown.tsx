@@ -1,8 +1,7 @@
 import React from 'react';
-
-// 一个轻量的 Markdown 渲染器，零依赖。
-// 支持：标题、段落、有序/无序列表、引用、代码块、行内代码、
-//       粗体、斜体、链接、图片、分隔线。
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
+import { slugifyHeading } from '../utils/extractHeadings';
 
 let keyCounter = 0;
 const nextKey = () => `md-${keyCounter++}`;
@@ -108,14 +107,17 @@ export function Markdown({ source }: { source: string }): React.ReactElement {
         i++;
       }
       i++; // 跳过结束的 ```
+      const codeStr = code.join('\n');
+      const highlighted =
+        lang && hljs.getLanguage(lang)
+          ? hljs.highlight(codeStr, { language: lang, ignoreIllegals: true }).value
+          : hljs.highlightAuto(codeStr).value;
       blocks.push(
-        <pre
-          key={nextKey()}
-          className="my-8 overflow-x-auto rounded-lg bg-slate-900 p-5 text-sm leading-relaxed text-slate-100 dark:bg-black/60"
-        >
-          <code data-lang={lang} className="font-mono">
-            {code.join('\n')}
-          </code>
+        <pre key={nextKey()} className="my-8 overflow-x-auto rounded-lg text-sm leading-relaxed">
+          <code
+            className={`hljs block p-5 font-mono${lang ? ` language-${lang}` : ''}`}
+            dangerouslySetInnerHTML={{ __html: highlighted }}
+          />
         </pre>,
       );
       continue;
@@ -189,11 +191,12 @@ export function Markdown({ source }: { source: string }): React.ReactElement {
       continue;
     }
 
-    // 标题
+    // 标题（加 id 用于 TOC 锚点）
     const heading = line.match(/^(#{1,4})\s+(.*)$/);
     if (heading) {
       const level = heading[1].length;
-      const content = parseInline(heading[2]);
+      const rawText = heading[2];
+      const content = parseInline(rawText);
       const cls = {
         1: 'mt-12 mb-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-white',
         2: 'mt-12 mb-4 text-2xl font-bold text-slate-900 dark:text-white',
@@ -203,7 +206,7 @@ export function Markdown({ source }: { source: string }): React.ReactElement {
       blocks.push(
         React.createElement(
           `h${level}`,
-          { key: nextKey(), className: cls },
+          { key: nextKey(), id: slugifyHeading(rawText), className: cls },
           content,
         ),
       );
