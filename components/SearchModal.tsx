@@ -15,7 +15,7 @@ function search(query: string): Post[] {
       p.title.toLowerCase().includes(q) ||
       p.excerpt.toLowerCase().includes(q) ||
       p.tags.some((t) => t.toLowerCase().includes(q)) ||
-      p.content.toLowerCase().includes(q),
+      p.searchText.toLowerCase().includes(q),
   ).slice(0, 8);
 }
 

@@ -3,7 +3,8 @@ import path from 'path';
 import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// ── RSS 生成插件 ──────────────────────────────────────────
+// ── 公共 frontmatter 解析 ─────────────────────────────────
+// 简版：只处理 key: value（RSS / OG 插件用）
 function parseFm(raw: string): Record<string, string> {
   const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(raw);
   if (!m) return {};
@@ -13,6 +14,48 @@ function parseFm(raw: string): Record<string, string> {
     if (kv) data[kv[1]] = kv[2].trim().replace(/^['"]|['"]$/g, '');
   }
   return data;
+}
+
+// 完整版：支持 block-sequence 数组（tags 用）
+function parseFmFull(raw: string): Record<string, string | string[]> {
+  const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(raw);
+  if (!m) return {};
+  const data: Record<string, string | string[]> = {};
+  const lines = m[1].split(/\r?\n/);
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (!line.trim()) { i++; continue; }
+    const kv = /^([A-Za-z0-9_]+):\s*(.*)$/.exec(line);
+    if (!kv) { i++; continue; }
+    const key = kv[1];
+    const rest = kv[2].trim().replace(/^['"]|['"]$/g, '');
+    if (rest === '') {
+      const items: string[] = [];
+      i++;
+      while (i < lines.length && /^\s+-\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^\s+-\s+/, '').replace(/^['"]|['"]$/g, '').trim());
+        i++;
+      }
+      data[key] = items;
+    } else {
+      data[key] = rest;
+      i++;
+    }
+  }
+  return data;
+}
+
+function toSearchText(body: string): string {
+  return body
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]+`/g, ' ')
+    .replace(/#{1,6}\s+/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[*_~|>!\[\]()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 500);
 }
 
 function rssPlugin(): Plugin {
@@ -125,6 +168,59 @@ function articleMetaPlugin(): Plugin {
     },
   };
 }
+// ── 文章元数据虚拟模块插件 ────────────────────────────────
+// 构建时读取所有 .md 的 frontmatter，生成 virtual:posts-meta 模块。
+// 正文不打包进主 bundle，改由 PostPage 按需懒加载。
+function postsMetaPlugin(): Plugin {
+  const virtualId = 'virtual:posts-meta';
+  const resolvedId = '\0' + virtualId;
+  return {
+    name: 'posts-meta',
+    resolveId(id) {
+      if (id === virtualId) return resolvedId;
+    },
+    load(id) {
+      if (id !== resolvedId) return;
+      const postsDir = path.resolve(__dirname, 'content/posts');
+      if (!fs.existsSync(postsDir)) return 'export default []';
+
+      const posts = fs
+        .readdirSync(postsDir)
+        .filter((f) => f.endsWith('.md'))
+        .map((f) => {
+          const slug = f.replace(/\.md$/, '');
+          const raw  = fs.readFileSync(path.join(postsDir, f), 'utf-8');
+          const fm   = parseFmFull(raw);
+
+          const bodyMatch = /^---[\s\S]*?\n---\r?\n?([\s\S]*)$/.exec(raw);
+          const body = bodyMatch ? bodyMatch[1].trim() : '';
+
+          const chineseChars  = (body.match(/[一-龥]/g) ?? []).length;
+          const englishWords  = (body.match(/[A-Za-z0-9]+/g)    ?? []).length;
+          const readingMinutes = Math.max(1, Math.round(chineseChars / 350 + englishWords / 200));
+
+          const tags = Array.isArray(fm.tags)
+            ? fm.tags as string[]
+            : fm.tags ? [String(fm.tags)] : [];
+
+          return {
+            slug,
+            title:          String(fm.title   ?? slug),
+            excerpt:        String(fm.excerpt  ?? ''),
+            date:           String(fm.date     ?? ''),
+            author:         String(fm.author   ?? '锚点'),
+            tags,
+            cover:          fm.cover ? String(fm.cover) : undefined,
+            readingMinutes,
+            searchText:     toSearchText(body),
+          };
+        })
+        .filter((p) => p.title);
+
+      return `export default ${JSON.stringify(posts)}`;
+    },
+  };
+}
 // ─────────────────────────────────────────────────────────
 
 export default defineConfig({
@@ -133,7 +229,7 @@ export default defineConfig({
     port: 3000,
     host: '0.0.0.0',
   },
-  plugins: [react(), rssPlugin(), articleMetaPlugin()],
+  plugins: [react(), postsMetaPlugin(), rssPlugin(), articleMetaPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),

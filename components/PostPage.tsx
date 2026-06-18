@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { getPostBySlug, sortedPosts } from '../data/posts';
+import React, { useEffect, useState } from 'react';
+import { getPostBySlug, loadPostContent, sortedPosts } from '../data/posts';
 import { formatDate } from '../utils/formatDate';
-import { estimateReadingMinutes } from '../utils/readingTime';
 import { useReadingPosition } from '../utils/useReadingPosition';
 import { useViewCount } from '../utils/useViewCount';
 import { useDocumentMeta } from '../utils/useDocumentMeta';
@@ -17,6 +16,13 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
 
   const post = getPostBySlug(slug);
 
+  // 正文按需懒加载
+  const [content, setContent] = useState<string | null>(null);
+  useEffect(() => {
+    setContent(null);
+    loadPostContent(slug).then(setContent);
+  }, [slug]);
+
   // OG meta（Hook 必须在所有 return 前调用）
   useDocumentMeta({
     title: post?.title,
@@ -28,8 +34,8 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
 
   if (!post) return <NotFound />;
 
-  const minutes = post.readingMinutes ?? estimateReadingMinutes(post.content);
-  const headings = extractHeadings(post.content);
+  const minutes = post.readingMinutes;
+  const headings = content ? extractHeadings(content) : [];
 
   const [copied, setCopied] = useState(false);
   const shareUrl = `https://www.maodian.uk/post/${slug}`;
@@ -37,31 +43,23 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: shareUrl,
-        });
+        await navigator.share({ title: post.title, text: post.excerpt, url: shareUrl });
         return;
       } catch {
-        // 用户取消分享，不做处理
         return;
       }
     }
-    // 降级：复制链接
     await navigator.clipboard.writeText(shareUrl).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // 上一篇 / 下一篇（sortedPosts 已按日期倒序）
   const idx = sortedPosts.findIndex((p) => p.slug === slug);
   const newer = idx > 0 ? sortedPosts[idx - 1] : null;
   const older = idx >= 0 && idx < sortedPosts.length - 1 ? sortedPosts[idx + 1] : null;
 
   return (
     <div className="relative">
-      {/* 文章内容 */}
       <article className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
         <a
           href="#/"
@@ -129,9 +127,23 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
           />
         )}
 
-        <div className="text-[1.125rem] leading-[1.9]">
-          <Markdown source={post.content} />
-        </div>
+        {/* 正文：加载中显示骨架，加载完渲染 Markdown */}
+        {content === null ? (
+          <div className="animate-pulse space-y-3">
+            {Array.from({ length: 10 }, (_, i) => (
+              <div
+                key={i}
+                className={`h-4 rounded bg-slate-200 dark:bg-slate-700 ${
+                  i % 4 === 3 ? 'w-2/3' : i % 4 === 2 ? 'w-5/6' : 'w-full'
+                }`}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-[1.125rem] leading-[1.9]">
+            <Markdown source={content} />
+          </div>
+        )}
 
         {/* 上一篇 / 下一篇导航 */}
         {(newer || older) && (
@@ -172,7 +184,7 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
         </div>
       </article>
 
-      {/* 悬浮目录：宽屏下显示在文章右侧 */}
+      {/* 悬浮目录：内容加载完后出现 */}
       {headings.length >= 2 && (
         <div className="fixed right-4 top-28 hidden w-52 xl:block 2xl:right-8">
           <div className="max-h-[calc(100vh-8rem)] overflow-y-auto rounded-xl border border-slate-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">

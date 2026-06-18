@@ -13,12 +13,14 @@ export interface Post {
   author: string;
   /** 标签 */
   tags: string[];
-  /** 预计阅读时长（分钟），可选；不填则根据正文自动估算 */
-  readingMinutes?: number;
+  /** 预计阅读时长（分钟），构建时由 postsMetaPlugin 计算 */
+  readingMinutes: number;
   /** 封面图地址，可选 */
   cover?: string;
-  /** 正文，使用 Markdown 编写 */
-  content: string;
+  /** 用于搜索的纯文本摘录（无 Markdown 符号），构建时生成 */
+  searchText: string;
+  /** 正文 Markdown——仅在文章页按需加载，列表页为 undefined */
+  content?: string;
 }
 
 export type Route =
