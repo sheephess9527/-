@@ -17,15 +17,8 @@ export const siteConfig = {
     email: 'mailto:hztbc001@gmail.com',
     twitter: '',
   },
-  // 评论区。两套并存，用 enabled 开关控制显示哪个（可单开、可都开）。
+  // 评论区（giscus，基于 GitHub Discussions）。enabled 改为 false 可整体隐藏。
   comments: {
-    // Waline：匿名评论，无需登录，国内读者友好。需先部署后端拿到 serverURL。
-    waline: {
-      enabled: true,
-      serverURL: '',                            // 形如 https://xxx.vercel.app
-    },
-    // giscus：基于 GitHub Discussions，需 GitHub 账号。
-    // 暂时保持开启，避免 Waline 后端就绪前评论区空窗；Waline 配好后可改为 false。
     giscus: {
       enabled: true,
       repo: 'sheephess9527/maodianblog',        // owner/name
