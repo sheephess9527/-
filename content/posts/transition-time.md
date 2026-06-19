@@ -3,6 +3,7 @@ title: 你的日历塞满了，但效率去哪了？
 excerpt: 任务和任务之间的空白，不是浪费，是系统运作的必要间隙。没有过渡时间，你的每一天都在追赶，永远追不上。
 date: 2026-06-20
 author: 锚点
+cover: https://picsum.photos/seed/738/1200/800
 tags:
   - 效率
 ---
