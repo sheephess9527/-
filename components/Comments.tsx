@@ -1,23 +1,46 @@
 import React, { useEffect, useRef } from 'react';
+import { init, type WalineInstance } from '@waline/client';
+import '@waline/client/style';
 import { siteConfig } from '../data/site';
-
-// 基于 Giscus（GitHub Discussions）的评论区。
-// 需要在 data/site.ts 的 comments 中填好 repoId / categoryId 才会渲染。
-// 主题随站点明暗模式自动切换：监听 <html> 的 dark class 变化，
-// 通过 postMessage 通知 giscus iframe 更新主题。
 
 const giscusTheme = () =>
   document.documentElement.classList.contains('dark') ? 'dark_dimmed' : 'light';
 
-const Comments: React.FC<{ slug: string }> = ({ slug }) => {
+// ── Waline：匿名评论，无需登录 ───────────────────────────────
+const WalineComments: React.FC<{ slug: string }> = ({ slug }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { repo, repoId, category, categoryId } = siteConfig.comments;
+  const instanceRef = useRef<WalineInstance | null>(null);
+  const { serverURL } = siteConfig.comments.waline;
+
+  useEffect(() => {
+    if (!ref.current || !serverURL) return;
+    instanceRef.current = init({
+      el: ref.current,
+      serverURL,
+      path: `/post/${slug}`,
+      lang: 'zh-CN',
+      dark: 'html.dark',
+      locale: { placeholder: '欢迎留言，匿名也可（填昵称即可，邮箱选填）…' },
+    });
+    return () => {
+      instanceRef.current?.destroy();
+      instanceRef.current = null;
+    };
+  }, [slug, serverURL]);
+
+  if (!serverURL) return null;
+  return <div ref={ref} />;
+};
+
+// ── giscus：基于 GitHub Discussions ──────────────────────────
+const GiscusComments: React.FC<{ slug: string }> = ({ slug }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { repo, repoId, category, categoryId } = siteConfig.comments.giscus;
 
   useEffect(() => {
     const container = ref.current;
     if (!container || !repoId || !categoryId) return;
 
-    // slug 变化时清空旧实例，重新注入
     container.innerHTML = '';
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
@@ -38,7 +61,6 @@ const Comments: React.FC<{ slug: string }> = ({ slug }) => {
     script.setAttribute('data-loading', 'lazy');
     container.appendChild(script);
 
-    // 监听明暗模式切换，同步 giscus 主题
     const observer = new MutationObserver(() => {
       const iframe = container.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
       iframe?.contentWindow?.postMessage(
@@ -46,20 +68,30 @@ const Comments: React.FC<{ slug: string }> = ({ slug }) => {
         'https://giscus.app',
       );
     });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
   }, [slug, repo, repoId, category, categoryId]);
 
   if (!repoId || !categoryId) return null;
+  return <div ref={ref} />;
+};
+
+// ── 评论区容器：按开关渲染 Waline / giscus（可单开、可都开）──
+const Comments: React.FC<{ slug: string }> = ({ slug }) => {
+  const { waline, giscus } = siteConfig.comments;
+  const showWaline = waline.enabled && !!waline.serverURL;
+  const showGiscus = giscus.enabled && !!giscus.repoId && !!giscus.categoryId;
+
+  if (!showWaline && !showGiscus) return null;
 
   return (
     <section className="mt-16 border-t border-slate-200 pt-10 dark:border-slate-800">
       <h2 className="mb-6 text-sm font-semibold uppercase tracking-widest text-slate-400">评论</h2>
-      <div ref={ref} />
+      {showWaline && <WalineComments slug={slug} />}
+      {showWaline && showGiscus && (
+        <div className="my-8 border-t border-dashed border-slate-200 dark:border-slate-800" />
+      )}
+      {showGiscus && <GiscusComments slug={slug} />}
     </section>
   );
 };

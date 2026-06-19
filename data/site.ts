@@ -17,14 +17,22 @@ export const siteConfig = {
     email: 'mailto:hztbc001@gmail.com',
     twitter: '',
   },
-  // 评论区（Giscus，基于 GitHub Discussions）。
-  // 填好 repoId / categoryId 后，文章底部自动出现评论区；留空则不显示。
-  // 获取方式见 README 或 https://giscus.app —— 输入仓库后会生成这两个 ID。
+  // 评论区。两套并存，用 enabled 开关控制显示哪个（可单开、可都开）。
   comments: {
-    repo: 'sheephess9527/maodianblog',          // owner/name
-    repoId: 'R_kgDOQUFQXQ',                      // 形如 R_kgD...
-    category: 'Announcements',                   // Discussions 分类名
-    categoryId: 'DIC_kwDOQUFQXc4C_cga',          // 形如 DIC_kwD...
+    // Waline：匿名评论，无需登录，国内读者友好。需先部署后端拿到 serverURL。
+    waline: {
+      enabled: true,
+      serverURL: '',                            // 形如 https://xxx.vercel.app
+    },
+    // giscus：基于 GitHub Discussions，需 GitHub 账号。
+    // 暂时保持开启，避免 Waline 后端就绪前评论区空窗；Waline 配好后可改为 false。
+    giscus: {
+      enabled: true,
+      repo: 'sheephess9527/maodianblog',        // owner/name
+      repoId: 'R_kgDOQUFQXQ',                   // 形如 R_kgD...
+      category: 'Announcements',                // Discussions 分类名
+      categoryId: 'DIC_kwDOQUFQXc4C_cga',       // 形如 DIC_kwD...
+    },
   },
   // “关于”页面的内容（Markdown）
   about: `
