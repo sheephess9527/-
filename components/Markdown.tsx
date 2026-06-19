@@ -1,7 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
 import { slugifyHeading } from '../utils/extractHeadings';
+import { CheckIcon, CopyIcon } from './Icons';
+
+function CodeBlock({ code, lang }: { code: string; lang: string }) {
+  const [copied, setCopied] = useState(false);
+  const highlighted =
+    lang && hljs.getLanguage(lang)
+      ? hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
+      : hljs.highlightAuto(code).value;
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {});
+  };
+  return (
+    <pre className="group relative my-8 overflow-x-auto rounded-lg text-sm leading-relaxed">
+      <button
+        onClick={handleCopy}
+        title={copied ? '已复制' : '复制代码'}
+        className="absolute right-3 top-3 flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-[11px] text-slate-300 opacity-0 transition-opacity hover:bg-white/20 group-hover:opacity-100"
+      >
+        {copied
+          ? <><CheckIcon className="h-3 w-3 text-green-400" /><span className="text-green-400">已复制</span></>
+          : <><CopyIcon className="h-3 w-3" /><span>复制</span></>
+        }
+      </button>
+      <code
+        className={`hljs block p-5 font-mono${lang ? ` language-${lang}` : ''}`}
+        dangerouslySetInnerHTML={{ __html: highlighted }}
+      />
+    </pre>
+  );
+}
 
 let keyCounter = 0;
 const nextKey = () => `md-${keyCounter++}`;
@@ -108,18 +141,7 @@ export function Markdown({ source }: { source: string }): React.ReactElement {
       }
       i++; // 跳过结束的 ```
       const codeStr = code.join('\n');
-      const highlighted =
-        lang && hljs.getLanguage(lang)
-          ? hljs.highlight(codeStr, { language: lang, ignoreIllegals: true }).value
-          : hljs.highlightAuto(codeStr).value;
-      blocks.push(
-        <pre key={nextKey()} className="my-8 overflow-x-auto rounded-lg text-sm leading-relaxed">
-          <code
-            className={`hljs block p-5 font-mono${lang ? ` language-${lang}` : ''}`}
-            dangerouslySetInnerHTML={{ __html: highlighted }}
-          />
-        </pre>,
-      );
+      blocks.push(<CodeBlock key={nextKey()} code={codeStr} lang={lang} />);
       continue;
     }
 

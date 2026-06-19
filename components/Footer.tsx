@@ -1,6 +1,6 @@
 import React from 'react';
 import { siteConfig } from '../data/site';
-import { GithubIcon, MailIcon, TwitterIcon } from './Icons';
+import { GithubIcon, MailIcon, RssIcon, TwitterIcon } from './Icons';
 
 const Footer: React.FC = () => {
   const { social } = siteConfig;
@@ -41,7 +41,26 @@ const Footer: React.FC = () => {
               <MailIcon className="h-4 w-4" />
             </a>
           )}
+          <a
+            href="/rss.xml"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="RSS 订阅"
+            title="RSS 订阅"
+            className="rounded-full p-2 text-slate-400 transition-colors hover:text-orange-500 dark:hover:text-orange-400"
+          >
+            <RssIcon className="h-4 w-4" />
+          </a>
         </div>
+        <a
+          href="/rss.xml"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-400 transition-colors hover:border-orange-400 hover:text-orange-500 dark:border-slate-700 dark:hover:border-orange-500 dark:hover:text-orange-400"
+        >
+          <RssIcon className="h-3 w-3" />
+          RSS 订阅
+        </a>
         <p className="text-xs text-slate-400 dark:text-slate-600">
           © {year} {siteConfig.title}
         </p>

@@ -14,6 +14,17 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
   useReadingPosition(slug);
   const views = useViewCount(slug);
 
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? Math.min(100, (window.scrollY / docHeight) * 100) : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [slug]);
+
   const post = getPostBySlug(slug);
 
   // 正文按需懒加载
@@ -58,8 +69,18 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
   const newer = idx > 0 ? sortedPosts[idx - 1] : null;
   const older = idx >= 0 && idx < sortedPosts.length - 1 ? sortedPosts[idx + 1] : null;
 
+  const relatedPosts = sortedPosts
+    .filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t)))
+    .slice(0, 3);
+
   return (
     <div className="relative">
+      {/* 阅读进度条 */}
+      <div
+        className="no-print fixed left-0 top-0 z-50 h-0.5 bg-brand-500 transition-[width] duration-75"
+        style={{ width: `${progress}%` }}
+      />
+
       <article className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
         <a
           href="#/"
@@ -171,6 +192,31 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
               </a>
             ) : <div />}
           </nav>
+        )}
+
+        {/* 相关文章 */}
+        {relatedPosts.length > 0 && (
+          <div className="mt-12 border-t border-slate-200 pt-8 dark:border-slate-800">
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-400">相关文章</h2>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {relatedPosts.map((p) => (
+                <a
+                  key={p.slug}
+                  href={`#/post/${p.slug}`}
+                  className="group flex flex-col gap-1 rounded-xl border border-slate-200 p-4 transition-colors hover:border-brand-300 dark:border-slate-800 dark:hover:border-brand-700"
+                >
+                  {p.tags[0] && (
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-accent-500">
+                      {p.tags[0]}
+                    </span>
+                  )}
+                  <span className="line-clamp-2 text-sm font-medium text-slate-700 transition-colors group-hover:text-brand-600 dark:text-slate-300 dark:group-hover:text-brand-400">
+                    {p.title}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
         )}
 
         <div className="mt-8 border-t border-slate-200 pt-8 dark:border-slate-800">
