@@ -17,6 +17,15 @@ export const siteConfig = {
     email: 'mailto:hztbc001@gmail.com',
     twitter: '',
   },
+  // 评论区（Giscus，基于 GitHub Discussions）。
+  // 填好 repoId / categoryId 后，文章底部自动出现评论区；留空则不显示。
+  // 获取方式见 README 或 https://giscus.app —— 输入仓库后会生成这两个 ID。
+  comments: {
+    repo: 'sheephess9527/maodianblog',          // owner/name
+    repoId: '',                                 // 形如 R_kgD...
+    category: 'Announcements',                  // Discussions 分类名
+    categoryId: '',                             // 形如 DIC_kwD...
+  },
   // “关于”页面的内容（Markdown）
   about: `
 ## 关于「锚点」

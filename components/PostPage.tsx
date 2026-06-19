@@ -8,6 +8,7 @@ import { extractHeadings } from '../utils/extractHeadings';
 import { Markdown } from './Markdown';
 import NotFound from './NotFound';
 import TableOfContents from './TableOfContents';
+import Comments from './Comments';
 import { ArrowLeftIcon, ClockIcon, EyeIcon, ShareIcon, CheckIcon } from './Icons';
 
 const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
@@ -218,6 +219,9 @@ const PostPage: React.FC<{ slug: string }> = ({ slug }) => {
             </div>
           </div>
         )}
+
+        {/* 评论区（Giscus，配置好后显示） */}
+        <Comments slug={slug} />
 
         <div className="mt-8 border-t border-slate-200 pt-8 dark:border-slate-800">
           <a
