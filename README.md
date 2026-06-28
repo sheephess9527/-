@@ -23,7 +23,7 @@
 
 1. **先列已有 slug 防止选题重复**：`ls content/posts/`。
 2. 每篇新建 `content/posts/<英文-slug>.md`，frontmatter 见下方《如何添加内容》。
-3. **封面必填**：`cover: https://picsum.photos/seed/N/1200/800`，`N` 取比现有最大 seed 更大的数（`rg -o "seed/(\d+)/" content/posts -r '$1' | sort -n | tail -1` 查最大值，依次 +1）。缺封面卡片会退化成纯标题块。
+3. **封面必填**：`cover: https://picsum.photos/seed/N/1200/800`，`N` 取比现有最大 seed 更大的数（`rg -oN --no-filename "seed/(\d+)/" content/posts -r '$1' | sort -n | tail -1` 查最大值，依次 +1）。缺封面卡片会退化成纯标题块。
 4. `npm run build` 验证无错（会顺带生成 RSS 和静态文章页）。
 5. 提交并推送（见下方《推送》）。
 
