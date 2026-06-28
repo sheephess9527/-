@@ -6,6 +6,52 @@
 
 构建产物是**纯静态文件**，无服务端、无数据库。
 
+---
+
+## 🤝 接手指南（AI / 新账号必读）
+
+> 这一节让任何新的 AI 或新登录的账号都能立刻接手。**先读完这一节再动手。**
+
+### 一句话现状
+个人中文博客，仓库 `sheephess9527/maodianblog`，开发分支 `main`，推到 `main` 后 **Cloudflare Pages 自动构建并部署**到 [www.maodian.uk](https://www.maodian.uk)，约 1–2 分钟生效。`dist/` 由 Cloudflare 在云端构建，**无需提交**。目前 88+ 篇文章。
+
+### 凭据
+推送需要一个对该仓库有 **push 权限的 GitHub Personal Access Token**。它通过会话环境提供，**绝不写进仓库**。新接手者若没有，向仓库主人索取。
+
+### 日常最高频任务：发布文章
+用户最常说「**写/更新今天的四篇**」，含义是每个板块各一篇：**系统思维 / 决策 / 效率 / 思考**（有时只要两篇或指定方向）。流程：
+
+1. **先列已有 slug 防止选题重复**：`ls content/posts/`。
+2. 每篇新建 `content/posts/<英文-slug>.md`，frontmatter 见下方《如何添加内容》。
+3. **封面必填**：`cover: https://picsum.photos/seed/N/1200/800`，`N` 取比现有最大 seed 更大的数（`rg -o "seed/(\d+)/" content/posts -r '$1' | sort -n | tail -1` 查最大值，依次 +1）。缺封面卡片会退化成纯标题块。
+4. `npm run build` 验证无错（会顺带生成 RSS 和静态文章页）。
+5. 提交并推送（见下方《推送》）。
+
+> **草稿审阅**：用户有时说「先不发，我认可后再发」。此时只写本地文件、**不要 build/commit/push**，等用户确认后再发。Stop hook 可能提示「未提交/未跟踪文件」，这是预期的，忽略即可。
+
+### 文风规范（保持一致很重要）
+- **全程中文**，正文里**不要夹突兀的英文单词**（概念首次出现可在标题/括号注明英文，如「损失厌恶（loss aversion）」，但正文叙述用中文）。
+- 结构：**反直觉的钩子或小故事开头** → `##` 小标题分段 → 多用破折号、短段落、口语化 → **结尾落到一个对读者的提问或可执行的小行动**。
+- 调性：发人深省、引起共鸣；常借经典概念（梅多斯系统思维、卡尼曼、芒格、马克·吐温等）切入，再落到日常。
+- 长度：每篇约 250–400 行 Markdown（含小标题），读来约 3–5 分钟。
+
+### 推送（含限流应急方案）
+正常：`git push origin main`（或带 PAT 的 HTTPS URL）。
+
+> ⚠️ **已知坑**：同一会话短时间内推送多次，GitHub 会对 `git push` 端点触发**二级频率限制**，返回 **403**（但 `git fetch`/读操作仍正常、token 权限也正常）。这不是 token 失效，也不是被墙。
+>
+> **应急方案**：改用 **GitHub Contents API** 提交（不同端点，不受该限流影响）。对每个文件 `PUT /repos/sheephess9527/maodianblog/contents/<路径>`，body 为 `{"message","content"(base64),"branch":"main"}`；**更新已有文件**需先 `GET …/contents/<路径>?ref=main` 取 `sha` 一并带上。提交后用 `git fetch` + `git reset --hard FETCH_HEAD` 把本地同步到远端，保持历史干净。限流通常一小时内自解除。
+
+### 架构红线（别踩，否则线上会坏）
+- 🚫 **别把静态分享页改回「空壳 + 跳转」**。`articleMetaPlugin` 现在把每篇文章渲染成**完整自包含静态 HTML**（内联样式、无跳转、不依赖 SPA）。这是为根治**微信打开分享链接白屏**而做的——微信老旧 WebView 跑不起整个 SPA。改回去会重现白屏/死循环。
+- 🚫 **关键渲染路径别依赖国内打不开的资源**。React 等已打包进 bundle；首屏内容**不得**依赖 `aistudiocdn`、Google Fonts、Tailwind CDN 等被墙/不稳定的外链才能显示（Tailwind 目前走 CDN，仅影响样式、可降级，但别让正文内容依赖它）。
+- ⚠️ **路由**：SPA 用 hash 路由（`/#/post/slug`）；对外/分享链接用干净的 `/post/slug`（静态文章页）。新文章自动进入 `import.meta.glob` 懒加载，无需改代码。
+
+### 验证白屏类问题（可选但推荐）
+本环境预装 Playwright（全局 `/opt/node22/lib/node_modules/playwright`，Chromium 在 `/opt/pw-browsers/chromium`）。可 `cd dist && python3 -m http.server 8099` 起静态服务，再用 Playwright 冷加载 `http://localhost:8099/post/<slug>` 与 `/#/post/<slug>`，检查 `#root` 是否有内容、有无 `pageerror`，以此复现「冷启动/分享页」类问题。
+
+---
+
 ## ✨ 功能
 
 **阅读体验**
@@ -24,7 +70,7 @@
 - 📡 **RSS 订阅**：`/rss.xml`，页脚提供订阅入口
 
 **分享与 SEO**
-- 🔗 **微信 / 社交分享卡片**：构建时为每篇文章生成静态 `/post/[slug]/index.html`，带正确的 OG / Twitter meta，解决 SPA + hash 路由抓取不到卡片的问题
+- 🔗 **自包含静态文章页**：构建时为每篇文章生成 `/post/[slug]/index.html`，是一篇**完整、内联样式、不依赖 SPA/CDN 的静态文章**（含正文）+ 正确的 OG / Twitter meta。微信、爬虫、老旧浏览器都能直接读全文，不白屏；底部链接通往 App（评论 / 更多）。
 - 🔁 **Web Share API**：原生分享，不支持时降级为复制链接
 
 **外观与 PWA**
@@ -48,7 +94,7 @@
 | --- | --- |
 | `postsMetaPlugin` | 生成 `virtual:posts-meta` 元数据模块 |
 | `rssPlugin` | 构建时生成 `dist/rss.xml`（最新 20 篇） |
-| `articleMetaPlugin` | 为每篇文章生成静态 OG 页 `dist/post/[slug]/index.html` |
+| `articleMetaPlugin` | 为每篇文章生成**自包含静态文章页** `dist/post/[slug]/index.html`（含正文 + OG meta，内含构建期 Markdown→HTML 渲染器） |
 
 ## ✍️ 如何添加 / 修改内容
 
@@ -167,6 +213,7 @@ npm run preview    # 本地预览构建结果
 ## 📝 更新日志
 
 ### 2026-06
+- **修复微信分享白屏**：分享页从「空壳 + 跳转 SPA」改为**自包含静态文章页**（构建期把 Markdown 渲染成完整 HTML，内联样式、不依赖 SPA/CDN）。根因是微信老旧 WebView 跑不起整个 SPA。
 - **评论区**：接入 giscus（GitHub Discussions），主题随明暗模式自动切换，按文章 slug 独立映射
 - **阅读进度条**：文章页顶部细线随滚动实时显示
 - **相关文章**：文章底部按相同标签推荐
